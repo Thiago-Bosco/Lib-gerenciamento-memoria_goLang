@@ -14,7 +14,7 @@ Essa biblioteca oferece uma implementação eficiente de gerenciamento de memór
 Para utilizar a biblioteca, basta incluir a dependência no seu projeto Go:
 
 
-go get github.com/Thiago-Bosco/projeto-gerenciamento-memoria
+go get github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang
 Como Usar
 Exemplo Básico:
 
@@ -22,7 +22,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/Thiago-Bosco/projeto-gerenciamento-memoria/pkg/memorypool"
+	"github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang/pkg/memorypool"
+	"github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang/pkg/persistence"
+	"github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang/pkg/profiling"
+
 )
 
 func main() {
@@ -139,3 +142,8 @@ Crie uma nova branch (git checkout -b feature/novo-recurso).
 Faça as alterações necessárias e commit (git commit -am 'Adiciona novo recurso').
 Faça o push para a branch (git push origin feature/novo-recurso).
 Abra um pull request.
+
+
+
+
+Uso do Go.mod : require github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang v1.0.1
