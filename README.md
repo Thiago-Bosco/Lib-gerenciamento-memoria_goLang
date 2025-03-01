@@ -1,4 +1,4 @@
-# Projeto de Gerenciamento de Memória em Go
+# Biblioteca de Gerenciamento de Memória em Go
 
 Essa biblioteca oferece uma implementação eficiente de gerenciamento de memória com suporte a pools de memória concorrentes, métricas detalhadas de uso de memória, e monitoramento de alocações e reutilizações. A ideia é minimizar a contenção entre goroutines e fornecer informações valiosas sobre o uso de memória.
 
