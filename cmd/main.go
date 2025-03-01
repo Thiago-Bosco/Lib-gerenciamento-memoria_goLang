@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang/internal/persistence"
-	"github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang/internal/profiling"
 	"github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang/pkg/memorypool"
+	"github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang/pkg/persistence"
+	"github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang/pkg/profiling"
 )
 
 func main() {
