@@ -54,7 +54,7 @@ func main() {
 	}
 
 	// Mostrar as métricas
-	allocation, reuse, active, allocTime, reuseTime := pool.Metrics.ObterMetricas() // Acessando 'Metrics' corretamente
+	allocation, reuse, active, allocTime, reuseTime := pool.Metrics.GetMetrics() // Ajustado para 'GetMetrics'
 	fmt.Printf("Métricas:\n")
 	fmt.Printf(" - Alocações: %d\n", allocation)
 	fmt.Printf(" - Reutilizações: %d\n", reuse)

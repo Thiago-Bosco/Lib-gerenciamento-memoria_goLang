@@ -20,7 +20,7 @@ type ConcurrentMemoryPool struct {
 // NewConcurrentMemoryPool inicializa o pool concorrente para diferentes tamanhos de bloco e as métricas.
 func NewConcurrentMemoryPool(sizes []int) *ConcurrentMemoryPool {
 	cmp := &ConcurrentMemoryPool{
-		Metrics: NovaMemoryMetrics(), // Inicializa métricas
+		Metrics: NewMemoryMetrics(), // Inicializa métricas com a função correta
 	}
 
 	// Inicializa os pools dentro de cada shard
@@ -41,6 +41,7 @@ func NewConcurrentMemoryPool(sizes []int) *ConcurrentMemoryPool {
 
 // getShardIndex calcula um índice baseado no tamanho para determinar qual shard usar.
 func getShardIndex(size int) int {
+	// Calculando o índice com um hash mais eficiente
 	h := fnv.New32a()
 	h.Write([]byte(strconv.Itoa(size)))
 	return int(h.Sum32()) % shardCount
@@ -50,14 +51,15 @@ func getShardIndex(size int) int {
 func (cmp *ConcurrentMemoryPool) Get(size int) []byte {
 	start := time.Now() // Marca o início da alocação
 
+	// Calculando o índice do shard
 	shardIndex := getShardIndex(size)
 
 	cmp.mu[shardIndex].RLock()
 	pool, exists := cmp.shards[shardIndex][size]
 	cmp.mu[shardIndex].RUnlock()
 
+	// Se o pool não existe, cria um novo
 	if !exists {
-		// Criando dinamicamente um novo pool se necessário
 		cmp.mu[shardIndex].Lock()
 		pool = &sync.Pool{
 			New: func() interface{} {
@@ -68,14 +70,15 @@ func (cmp *ConcurrentMemoryPool) Get(size int) []byte {
 		cmp.mu[shardIndex].Unlock()
 	}
 
+	// Aloca o bloco
 	block := pool.Get().([]byte)
 
 	// Medir o tempo de alocação
 	elapsed := time.Since(start)
-	cmp.Metrics.RegistrarAlocacao()
+	cmp.Metrics.RegisterAllocation()
 
 	// Log do tempo de alocação
-	cmp.Metrics.AdicionarTempoDeAlocacao(elapsed)
+	cmp.Metrics.AddAllocationTime(elapsed)
 	return block
 }
 
@@ -83,7 +86,7 @@ func (cmp *ConcurrentMemoryPool) Get(size int) []byte {
 func (cmp *ConcurrentMemoryPool) Put(block []byte) {
 	start := time.Now() // Marca o início da reutilização
 
-	size := cap(block)
+	size := cap(block) // Usa a capacidade do slice para determinar o tamanho
 	shardIndex := getShardIndex(size)
 
 	cmp.mu[shardIndex].RLock()
@@ -91,12 +94,14 @@ func (cmp *ConcurrentMemoryPool) Put(block []byte) {
 	cmp.mu[shardIndex].RUnlock()
 
 	if exists {
+		// Reutiliza o bloco no pool
 		pool.Put(block)
+
 		// Atualiza as métricas
-		cmp.Metrics.RegistrarReutilizacao()
+		cmp.Metrics.RegisterReuse()
 
 		// Medir o tempo de reutilização
 		elapsed := time.Since(start)
-		cmp.Metrics.AdicionarTempoDeReutilizacao(elapsed)
+		cmp.Metrics.AddReuseTime(elapsed)
 	}
 }
