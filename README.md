@@ -146,3 +146,7 @@ Abra um pull request.
 Uso do Go.mod
 require github.com/Thiago-Bosco/Lib-gerenciamento-memoria_goLang v1.0.1
 
+
+
+teste
+
